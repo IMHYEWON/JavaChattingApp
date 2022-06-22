@@ -153,6 +153,8 @@ public class ClientFrame extends JFrame implements WindowListener, ActionListene
 	}
 
 	
+	
+	
 	/**
 	 * 내가 보낸 메시지는 오른쪽부터 채우는것처럼 보이기 위해 공백으로 패딩 처리함
 	 * (아직 긴 텍스트 처리 못함)
@@ -171,6 +173,25 @@ public class ClientFrame extends JFrame implements WindowListener, ActionListene
 	    return sb.toString();
 	}
 
+	/**
+	 * 내가 보낸 메시지는 오른쪽부터 채우는것처럼 보이기 위해 공백으로 패딩 처리함
+	 * (아직 긴 텍스트 처리 못함)
+	 * @param inputString, length
+	 */
+	public String getNewLine(String inputString, String ID) {
+		String outString = "";
+		int lineNum = (int) Math.ceil(inputString.length() / 12.0);
+		
+		for (int i = 0; i < lineNum - 1; i++) {
+			outString += inputString.substring(i*12, (i+1)*12);
+			outString += "[" + ID  + "]";
+			outString += "\n";
+		}
+		// 마지막 라인은 padding 추가
+		outString += padLeftZeros(inputString.substring(12*(lineNum - 1)) + "[" + ID  + "]", 17);		
+		
+		return outString;
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -186,10 +207,10 @@ public class ClientFrame extends JFrame implements WindowListener, ActionListene
 			
 			// private message
 			if (!other.equals("")) {
-				textB.append(padLeftZeros(myText+ "[" + id + "]", 17)+"\n");
+				textB.append(getNewLine(textF.getText(), id)+ "\n");
 				wc.sendMessage(other);
 			} else {
-				textB.append(padLeftZeros(textF.getText(), 12) + "[" + id + "]"+ "\n");
+				textB.append(getNewLine(textF.getText(), id)+ "\n");
 				wc.sendMessage();
 			}
 
